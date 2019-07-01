@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "keycloakGatekeeper.fullname" . }}
+  labels:
+    app: {{ template "keycloakGatekeeper.name" . }}
+    chart: {{ template "keycloakGatekeeper.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  rules:
+  - host: "{{ .Values.ingressHost }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ template "keycloakGatekeeper.fullname" . }}
+          servicePort: http

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "keycloakGatekeeper.fullname" . }}
+  labels:
+    app: {{ template "keycloakGatekeeper.name" . }}
+    chart: {{ template "keycloakGatekeeper.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  replicas: {{ default 1 .Values.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "keycloakGatekeeper.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "keycloakGatekeeper.name" . }}
+        chart: {{ template "keycloakGatekeeper.chart" . }}
+        release: {{ .Release.Name | quote }}
+        heritage: {{ .Release.Service | quote }}
+    spec:
+      containers:
+        - name: {{ template "keycloakGatekeeper.fullname" . }}
+          image: {{ .Values.image }}:{{ .Values.imageTag }}
+          args:
+            - --discovery-url={{ .Values.keycloakUrl }}/auth/realms/{{ .Values.realm }}
+            - --upstream-url={{ .Values.upstreamServiceUrl }}
+            - --client-id={{ .Values.clientId }}
+            - --client-secret={{ .Values.clientSecret | quote }}
+            - --listen=0.0.0.0:3000
+            - --match-claims=aud=account

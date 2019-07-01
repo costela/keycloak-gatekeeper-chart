@@ -1,0 +1,19 @@
+image: keycloak/keycloak-gatekeeper
+imageTag: 6.0.1
+
+# required: URL to the keycloak instance
+keycloakUrl: https://keycloak.example.com
+
+realm: master
+
+# required: should be created on keycloak
+clientId: "foo"
+clientSecret: "bar"
+
+# required: URL to service being proxied; may be an k8s internal URL
+upstreamServiceUrl: http://localhost:8080
+
+# required: the FQDN for the Ingress. E.g.: myingress.example.com
+ingressHost: ""
+
+replicas: 1
